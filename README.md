@@ -1,5 +1,7 @@
 # 概述
-参考：https://github.com/wyy-holding/dify-k8s，主要通过`Kompose`将`docker-compose.yaml`转换为Kubernetes资源文件。
+参考：https://github.com/wyy-holding/dify-k8s
+
+主要通过`Kompose`将`docker-compose.yaml`转换为Kubernetes资源文件。
 作者将这些文件进行了优化，分类。
 
 我在此基础上，进行了大量修改，做了进一步优化，分类。
