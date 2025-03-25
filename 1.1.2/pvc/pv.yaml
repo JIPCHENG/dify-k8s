@@ -8,6 +8,7 @@ spec:
   accessModes:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
+  storageClassName: managed-nfs-storage
   nfs:
     path: /data/nfs
     server: <NFS_SERVER_IP>

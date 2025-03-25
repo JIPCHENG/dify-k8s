@@ -6,6 +6,8 @@ metadata:
 spec:
   accessModes:
     - ReadWriteMany
+  storageClassName: managed-nfs-storage
+  volumeName: dify
   resources:
     requests:
       storage: 10Gi

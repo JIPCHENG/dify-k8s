@@ -53,8 +53,8 @@ chmod 777 -R dify
 ## 4. 数据库相关
 postgresql
 ```bash
-kubectl apply -f databases/postgres/postgres-StatefulSet.yaml
-kubectl apply -f databases/postgres/postgres-Service.yaml
+kubectl apply -f databases/postgresql/postgres-StatefulSet.yaml
+kubectl apply -f databases/postgresql/postgres-Service.yaml
 ```
 redis
 ```bash
@@ -104,7 +104,7 @@ kubectl apply -f services/web/web-Service.yaml
 ```
 worker
 ```bash
-kubectl apply -f services/worker/worker-Deployment.yaml
+kubectl apply -f services/worker/worker-StatefulSet.yaml
 kubectl apply -f services/worker/worker-Service.yaml
 ```
 
@@ -147,3 +147,30 @@ kubectl apply -f middleware/nginx/nginx-Service.yaml
 
 ## 2. 某些组件响应慢
 这些组件限制的cpu和内存，用的是最小资源。如果使用场景访问量很大，请根据实际情况调整。
+
+## 3. k8s nfs挂载失败
+```bash
+Mounting command: mount
+Mounting arguments: -t nfs 10.180.6.75:/srv/nfs /var/lib/kubelet/pods/7059a115-32ec-4dbc-9c4c-c5670649be94/volumes/kubernetes.io~nfs/dify
+Output: mount: /var/lib/kubelet/pods/7059a115-32ec-4dbc-9c4c-c5670649be94/volumes/kubernetes.io~nfs/dify: bad option; for several filesystems (e.g. nfs, cifs) you might need a /sbin/mount.<type> helper program.
+```
+解决办法：
+
+每一个node都需要安装nfs客户端，如果是ubuntu系统，使用命令`apt install -y nfs-common`
+
+确保nfs服务端`/etc/exports`配置正确，一定包含`no_root_squash`
+```bash
+/data/nfs *(rw,sync,no_subtree_check,no_root_squash)
+```
+重启nfs-server
+```bash
+# 刷新配置
+sudo exportfs -a
+# 重启nfs-server
+sudo systemctl restart nfs-server
+```
+
+## 3. k8s postgresql运行失败
+```bash
+
+```
