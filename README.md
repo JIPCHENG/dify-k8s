@@ -169,8 +169,3 @@ sudo exportfs -a
 # 重启nfs-server
 sudo systemctl restart nfs-server
 ```
-
-## 3. k8s postgresql运行失败
-```bash
-
-```
