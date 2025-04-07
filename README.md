@@ -24,6 +24,7 @@ services --> 服务相关：api，web，worker
 ```
 
 # 部署
+详细步骤，请参考文章：https://www.cnblogs.com/xiao987334176/p/18810257
 ## 1. 创建命名空间dify
 ```bash
 kubectl create namespace dify
@@ -37,6 +38,7 @@ kubectl apply -f env/env.yaml
 ## 3. 创建pv和pvc
 这里的pv是自建的NFS，请根据实际情况修改
 ```bash
+kubectl apply -f pvc/storageClass.yaml
 kubectl apply -f pvc/pv.yaml
 kubectl apply -f pvc/pvc.yaml
 ```
@@ -51,17 +53,34 @@ chmod 777 -R dify
 ```
 
 ## 4. 数据库相关
-postgresql
+### postgresql
 ```bash
 kubectl apply -f databases/postgresql/postgres-StatefulSet.yaml
 kubectl apply -f databases/postgresql/postgres-Service.yaml
 ```
-redis
+手动创建postgres,dify数据库
+```bash
+kubectl -n dify exec -it postgres-0 -- createdb postgres
+kubectl -n dify exec -it postgres-0 -- createdb dify
+```
+进入postgres容器，添加一条白名单
+```bash
+vi /var/lib/postgresql/data/pgdata/pg_hba.conf
+```
+最后一行增加
+```bash
+host    all             all             0.0.0.0/0               md5
+```
+重启PostgreSQL
+```bash
+kubectl -n dify delete pods postgres-0
+```
+### redis
 ```bash
 kubectl apply -f databases/redis/redis-StatefulSet.yaml
 kubectl apply -f databases/redis/redis-Service.yaml
 ```
-weaviate
+### weaviate
 ```bash
 kubectl apply -f databases/weaviate/weaviate-StatefulSet.yaml
 kubectl apply -f databases/weaviate/weaviate-Service.yaml
@@ -71,19 +90,19 @@ kubectl apply -f databases/weaviate/weaviate-Service.yaml
 
 `注意：这里的Nginx，最后一个运行。因为它是用来转发各个组件api接口的。`
 
-plugin-daemon
+### plugin-daemon
 ```bash
 kubectl apply -f middleware/plugin-daemon/plugin-daemon-Deployment.yaml
 kubectl apply -f middleware/plugin-daemon/plugin-daemon-Service.yaml
 ```
-sandbox
+### sandbox
 ```bash
 kubectl apply -f middleware/sandbox/sandbox-cm0.yaml
 kubectl apply -f middleware/sandbox/sandbox-cm1.yaml
 kubectl apply -f middleware/sandbox/sandbox-Deployment.yaml
 kubectl apply -f middleware/sandbox/sandbox-Service.yaml
 ```
-ssrf-proxy
+### ssrf-proxy
 ```bash
 kubectl apply -f middleware/ssrf-proxy/ssrf-proxy-cm0.yaml
 kubectl apply -f middleware/ssrf-proxy/ssrf-proxy-cm1.yaml
@@ -92,24 +111,30 @@ kubectl apply -f middleware/ssrf-proxy/ssrf-proxy-Service.yaml
 ```
 
 ## 6. 服务相关
-api
+### api
 ```bash
 kubectl apply -f services/api/api-StatefulSet.yaml
 kubectl apply -f services/api/api-Service.yaml
 ```
-web
+查看日志，是否有报错
+```bash
+kubectl -n dify logs -f api-0
+```
+**注意：api首次运行，会自动创建相关表结构，从日志中，就可以看到创建表结果过程。**
+
+### web
 ```bash
 kubectl apply -f services/web/web-Deployment.yaml
 kubectl apply -f services/web/web-Service.yaml
 ```
-worker
+### worker
 ```bash
 kubectl apply -f services/worker/worker-StatefulSet.yaml
 kubectl apply -f services/worker/worker-Service.yaml
 ```
 
 等待上面所有组件运行正常之后，部署Nginx组件
-nginx
+### nginx
 ```bash
 kubectl apply -f middleware/nginx/nginx-cm0.yaml
 kubectl apply -f middleware/nginx/nginx-cm1.yaml
@@ -158,9 +183,9 @@ Output: mount: /var/lib/kubelet/pods/7059a115-32ec-4dbc-9c4c-c5670649be94/volume
 
 每一个node都需要安装nfs客户端，如果是ubuntu系统，使用命令`apt install -y nfs-common`
 
-确保nfs服务端`/etc/exports`配置正确，一定包含`no_root_squash`
+确保nfs服务端`/etc/exports`配置正确，一定包含`no_all_squash，no_root_squash`
 ```bash
-/data/nfs *(rw,sync,no_subtree_check,no_root_squash)
+/data/nfs_share *(rw,sync,no_all_squash,no_root_squash,no_subtree_check)
 ```
 重启nfs-server
 ```bash
@@ -169,3 +194,14 @@ sudo exportfs -a
 # 重启nfs-server
 sudo systemctl restart nfs-server
 ```
+## 4. plugin-daemon组件运行失败
+```bash
+[error] failed to initialize database, got error failed to connect to `host=postgres user=postgres database=dify_plugin`: server error (FATAL: no pg_hba.conf entry for host "10.42.0.45", user "postgres", database "dify_plugin", no encryption (SQLSTATE 28000))
+```
+解决办法：
+
+PostgreSQL没有加白名单，修改文件`/var/lib/postgresql/data/pgdata/pg_hba.conf`增加一行
+```bash
+host    all             all             0.0.0.0/0               md5
+```
+重启PostgreSQL

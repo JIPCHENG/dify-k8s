@@ -1,13 +1,12 @@
-apiVersion: v1
 kind: PersistentVolumeClaim
+apiVersion: v1
 metadata:
   name: dify-pvc
   namespace: dify
 spec:
+  storageClassName: managed-nfs-storage
   accessModes:
     - ReadWriteMany
-  storageClassName: managed-nfs-storage
-  volumeName: dify
   resources:
     requests:
       storage: 10Gi

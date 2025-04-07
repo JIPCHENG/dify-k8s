@@ -35,10 +35,6 @@ spec:
             exec:
               command:
                 - "pg_isready"
-                - "-U"
-                - "$(PGUSER)"
-                - "-d"
-                - "$(POSTGRES_DB)"
             initialDelaySeconds: 5
             periodSeconds: 5
             timeoutSeconds: 2

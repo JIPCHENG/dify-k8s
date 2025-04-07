@@ -3,11 +3,12 @@ kind: PersistentVolume
 metadata:
   name: dify
 spec:
+  storageClassName: managed-nfs-storage
   capacity:
     storage: 10Gi
   accessModes:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
   nfs:
-    path: /data/nfs
-    server: <NFS_SERVER_IP>
+    path: /data/nfs_share
+    server: 10.0.2.15
