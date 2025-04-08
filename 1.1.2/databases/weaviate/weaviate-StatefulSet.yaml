@@ -18,6 +18,7 @@ spec:
       containers:
         - name: weaviate
           image: semitechnologies/weaviate:1.19.0
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
               name: weaviate-p

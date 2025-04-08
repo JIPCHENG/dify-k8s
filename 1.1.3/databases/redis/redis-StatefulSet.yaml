@@ -18,6 +18,7 @@ spec:
       containers:
       - name: redis
         image: redis:6-alpine
+        imagePullPolicy: IfNotPresent
         envFrom:
           - configMapRef:
               name: dify-config

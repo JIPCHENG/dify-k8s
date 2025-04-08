@@ -23,6 +23,7 @@ spec:
       containers:
       - name:  ssrf
         image:  ubuntu/squid:latest
+        imagePullPolicy: IfNotPresent
         envFrom:
           - configMapRef:
               name: dify-config

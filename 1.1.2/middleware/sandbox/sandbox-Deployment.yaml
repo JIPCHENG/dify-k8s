@@ -20,6 +20,7 @@ spec:
       containers:
       - name: sandbox
         image: langgenius/dify-sandbox:0.2.10
+        imagePullPolicy: IfNotPresent
         env:
           - name: API_KEY
             valueFrom:

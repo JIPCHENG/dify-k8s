@@ -20,6 +20,7 @@ spec:
       containers:
       - name: nginx
         image: nginx:latest
+        imagePullPolicy: IfNotPresent
         envFrom:
           - configMapRef:
               name: dify-config
