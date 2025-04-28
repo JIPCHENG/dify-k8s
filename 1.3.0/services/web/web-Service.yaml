@@ -9,6 +9,6 @@ spec:
     targetPort: 3000
     protocol: TCP
     name: web
-  type: NodePort
+  type: ClusterIP
   selector:
     app: web
