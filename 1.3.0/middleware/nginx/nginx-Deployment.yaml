@@ -17,6 +17,10 @@ spec:
         app: nginx
     spec:
       automountServiceAccountToken: false
+      imagePullSecrets:
+        - name: harbor-100.39
+      nodeSelector:
+        host.role: normal
       containers:
       - name: nginx
         image: 172.16.100.39/lesso-ai/nginx:latest
