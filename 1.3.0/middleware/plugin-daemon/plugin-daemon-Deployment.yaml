@@ -19,7 +19,7 @@ spec:
       automountServiceAccountToken: false
       containers:
         - name: plugin-daemon
-          image: langgenius/dify-plugin-daemon:0.0.8-local
+          image: 172.16.100.39/lesso-ai/langgenius/dify-plugin-daemon:0.0.9-local
           imagePullPolicy: IfNotPresent
           envFrom:
             - configMapRef:
@@ -204,6 +204,8 @@ spec:
             - mountPath: /app/storage
               name: plugin-daemon-storage
               subPath: dify/volumes/plugin_daemon
+      imagePullSecrets:
+      - name: harbor-100.39
       volumes:
         - name: plugin-daemon-storage
           persistentVolumeClaim:
