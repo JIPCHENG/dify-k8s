@@ -16,19 +16,23 @@ spec:
     metadata:
       labels:
         app: worker
+    imagePullSecrets:
+      - name: harbor-100.39
+    nodeSelector:
+      host.role: normal
     spec:
       restartPolicy: Always
       containers:
         - name: worker
-          image: langgenius/dify-api:1.3.0
+          image: 172.16.100.39/lesso-ai/langgenius/dify-api:1.3.0
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 5001
               protocol: TCP
           resources:
             limits:
-              cpu: 300m
-              memory: 1.5Gi
+              cpu: 1000m
+              memory: 2Gi
             requests:
               cpu: 100m
               memory: 0.5Gi
@@ -66,4 +70,4 @@ spec:
       volumes:
         - name: worker-storage
           persistentVolumeClaim:
-            claimName: dify-pvc
+            claimName: dify-api-data
