@@ -17,9 +17,13 @@ spec:
         app: sandbox
     spec:
       automountServiceAccountToken: false
+      imagePullSecrets:
+        - name: harbor-100.39
+      nodeSelector:
+        host.role: normal
       containers:
       - name: sandbox
-        image: langgenius/dify-sandbox:0.2.11
+        image: 172.16.100.39/lesso-ai/langgenius/dify-sandbox:0.2.11
         imagePullPolicy: IfNotPresent
         env:
           - name: API_KEY
