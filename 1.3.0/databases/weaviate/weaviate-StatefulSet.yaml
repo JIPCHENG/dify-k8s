@@ -15,17 +15,21 @@ spec:
         app: weaviate
     spec:
       terminationGracePeriodSeconds: 10
+      imagePullSecrets:
+        - name: harbor-100.39
+      nodeSelector:
+        host.role: normal
       containers:
         - name: weaviate
-          image: semitechnologies/weaviate:1.19.0
+          image: 172.16.100.39/lesso-ai/semitechnologies/weaviate:1.19.0
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
               name: weaviate-p
           resources:
             limits:
-              cpu: 100m
-              memory: 200Mi
+              cpu: 500m
+              memory: 1024Mi
             requests:
               cpu: 100m
               memory: 100Mi
@@ -87,4 +91,4 @@ spec:
       volumes:
         - name: weaviate-data
           persistentVolumeClaim:
-            claimName: dify-pvc
+            claimName: weaviate-data
