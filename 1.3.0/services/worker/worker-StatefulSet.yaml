@@ -69,4 +69,4 @@ spec:
       volumes:
         - name: worker-storage
           persistentVolumeClaim:
-            claimName: worker-api
+            claimName: worker-data
