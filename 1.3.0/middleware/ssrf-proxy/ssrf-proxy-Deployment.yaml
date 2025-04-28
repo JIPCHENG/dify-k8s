@@ -20,9 +20,13 @@ spec:
       labels:
         app:  ssrf
     spec:
+      imagePullSecrets:
+        - name: harbor-100.39
+      nodeSelector:
+        host.role: normal
       containers:
       - name:  ssrf
-        image:  ubuntu/squid:latest
+        image:  172.16.100.39/lesso-ai/ubuntu/squid:latest
         imagePullPolicy: IfNotPresent
         envFrom:
           - configMapRef:
@@ -58,8 +62,8 @@ spec:
             name: ssrf
         resources:
           limits:
-            cpu: 100m
-            memory: 300Mi
+            cpu: 300m
+            memory: 600Mi
           requests:
             cpu: 100m
             memory: 100Mi
