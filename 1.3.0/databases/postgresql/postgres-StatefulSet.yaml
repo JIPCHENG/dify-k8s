@@ -15,9 +15,13 @@ spec:
         app: postgres
     spec:
       terminationGracePeriodSeconds: 10
+      imagePullSecrets:
+        - name: harbor-100.39
+      nodeSelector:
+        host.role: normal
       containers:
         - name: postgres
-          image: postgres:15-alpine
+          image: 172.16.100.39/lesso-ai/postgres:15-alpine
           imagePullPolicy: IfNotPresent
           envFrom:
           - configMapRef:
@@ -27,8 +31,8 @@ spec:
               name: postgres-port
           resources:
             limits:
-              cpu: 100m
-              memory: 300Mi
+              cpu: 1000m
+              memory: 2048Mi
             requests:
               cpu: 100m
               memory: 100Mi
@@ -48,4 +52,4 @@ spec:
       volumes:
         - name: db-data
           persistentVolumeClaim:
-            claimName: dify-pvc
+            claimName: postgres-data
