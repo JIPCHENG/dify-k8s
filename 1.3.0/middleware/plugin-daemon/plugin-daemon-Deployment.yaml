@@ -17,9 +17,13 @@ spec:
         app: plugin-daemon
     spec:
       automountServiceAccountToken: false
+      imagePullSecrets:
+        - name: harbor-100.39
+      nodeSelector:
+        host.role: normal
       containers:
         - name: plugin-daemon
-          image: langgenius/dify-plugin-daemon:0.0.8-local
+          image: 172.16.100.39/lesso-ai/langgenius/dify-plugin-daemon:0.0.9-local
           imagePullPolicy: IfNotPresent
           envFrom:
             - configMapRef:
@@ -195,8 +199,8 @@ spec:
               name: service-port
           resources:
             limits:
-              cpu: 200m
-              memory: 600Mi
+              cpu: 500m
+              memory: 1024Mi
             requests:
               cpu: 100m
               memory: 100Mi
@@ -207,4 +211,4 @@ spec:
       volumes:
         - name: plugin-daemon-storage
           persistentVolumeClaim:
-            claimName: dify-pvc
+            claimName: plugin-daemon-data
