@@ -77,7 +77,6 @@ spec:
           requests:
             cpu: 100m
             memory: 100Mi
-        imagePullPolicy: IfNotPresent
         volumeMounts:
           - mountPath: /dependencies
             name: sandbox-cm0
