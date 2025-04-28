@@ -19,6 +19,10 @@ spec:
       labels:
         app: api
     spec:
+      nodeSelector:
+        host.role: normal
+      imagePullSecrets:
+      - name: harbor-100.39
       containers:
         - name: api
           image: langgenius/dify-api:1.3.0
@@ -68,11 +72,11 @@ spec:
             - containerPort: 5001
           resources:
             limits:
-              cpu: 500m
-              memory: 1.5Gi
+              cpu: "1"
+              memory: 2Gi
             requests:
-              cpu: 100m
-              memory: 0.5Gi
+              cpu: 200m
+              memory: 256Mi
           imagePullPolicy: IfNotPresent
           volumeMounts:
             - mountPath: /app/api/storage
@@ -81,4 +85,4 @@ spec:
       volumes:
         - name: api-storage
           persistentVolumeClaim:
-            claimName: dify-pvc
+            claimName: dify-api-data
