@@ -15,9 +15,13 @@ spec:
         app: redis
     spec:
       terminationGracePeriodSeconds: 10
+      imagePullSecrets:
+        - name: harbor-100.39
+      nodeSelector:
+        host.role: normal
       containers:
       - name: redis
-        image: redis:6-alpine
+        image: 172.16.100.39/lesso-ai/redis:6-alpine
         imagePullPolicy: IfNotPresent
         envFrom:
           - configMapRef:
@@ -34,8 +38,8 @@ spec:
         command: [ "redis-server", "--save", "20", "1", "--loglevel", "warning", "--requirepass", "$(REDIS_PASSWORD)" ]
         resources:
           limits:
-            cpu: 100m
-            memory: 300Mi
+            cpu: 500m
+            memory: 1024Mi
           requests:
             cpu: 100m
             memory: 100Mi
@@ -51,4 +55,4 @@ spec:
       volumes:
         - name: redis-data
           persistentVolumeClaim:
-            claimName: dify-pvc
+            claimName: redis-data
