@@ -62,7 +62,6 @@ spec:
                 configMapKeyRef:
                   name: dify-config
                   key: PLUGIN_DIFY_INNER_API_KEY
-          imagePullPolicy: IfNotPresent
           volumeMounts:
             - mountPath: /app/api/storage
               name: worker-storage
