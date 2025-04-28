@@ -9,6 +9,6 @@ spec:
     targetPort: 8194
     protocol: TCP
     name: sandbox
-  type: NodePort
+  type: ClusterIP
   selector:
     app: sandbox
