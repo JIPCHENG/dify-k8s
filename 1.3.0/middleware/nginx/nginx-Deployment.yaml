@@ -19,7 +19,7 @@ spec:
       automountServiceAccountToken: false
       containers:
       - name: nginx
-        image: nginx:latest
+        image: 172.16.100.39/lesso-ai/nginx:latest
         imagePullPolicy: IfNotPresent
         envFrom:
           - configMapRef:
@@ -29,8 +29,8 @@ spec:
           - containerPort: 443
         resources:
           limits:
-            cpu: 100m
-            memory: 300Mi
+            cpu: 500m
+            memory: 1024Mi
           requests:
             cpu: 100m
             memory: 100Mi
