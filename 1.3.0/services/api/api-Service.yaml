@@ -9,6 +9,6 @@ spec:
     targetPort: 5001
     protocol: TCP
     name: api
-  type: NodePort
+  type: ClusterIP
   selector:
     app: api
